@@ -313,14 +313,8 @@ class RedmineOauthController < AccountController
     end
 
     if RedmineOauth.enable_group_roles?
-      role_names.each do |role_name|
-        group = Group.find_by(lastname: role_name)
-        if group
-          unless user.groups.exists?(group.id)
-            user.groups << group
-          end
-        end
-      end
+      desired_groups = Group.where(lastname: role_names)
+      user.group_ids = desired_groups.ids
     end
 
     return if @admin.nil?
